@@ -295,7 +295,10 @@ class Animation(EventDispatcher):
             for key, values in anim['properties'].iteritems():
                 a, b = values
                 value = calculate(a, b, t)
-                setattr(widget, key, value)
+                try:
+                    setattr(widget, key, value)
+                except ReferenceError:
+                    Logger.warning("Animation: ReferenceError error catched in animation.py, line 299. App may misbehave.")
 
             self.dispatch('on_progress', widget, progress)
 
