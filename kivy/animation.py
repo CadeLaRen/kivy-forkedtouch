@@ -277,35 +277,35 @@ class Animation(EventDispatcher):
         Clock.unschedule(self._update)
 
     def _update(self, dt):
-        widgets = self._widgets
-        transition = self._transition
-        calculate = self._calculate
-        for uid in widgets.keys()[:]:
-            anim = widgets[uid]
-            widget = anim['widget']
-            if anim['time'] is None:
-                anim['time'] = 0.
-            else:
-                anim['time'] += dt
+        try:
+            widgets = self._widgets
+            transition = self._transition
+            calculate = self._calculate
+            for uid in widgets.keys()[:]:
+                anim = widgets[uid]
+                widget = anim['widget']
+                if anim['time'] is None:
+                    anim['time'] = 0.
+                else:
+                    anim['time'] += dt
 
-            # calculate progression
-            progress = min(1., anim['time'] / self._duration)
-            t = transition(progress)
+                # calculate progression
+                progress = min(1., anim['time'] / self._duration)
+                t = transition(progress)
 
-            # apply progression on widget
-            for key, values in anim['properties'].iteritems():
-                a, b = values
-                value = calculate(a, b, t)
-                try:
-                    setattr(widget, key, value)
-                except ReferenceError:
-                    Logger.warning("Animation: ReferenceError error catched in animation.py, line 299. App may misbehave.")
+                # apply progression on widget
+                for key, values in anim['properties'].iteritems():
+                    a, b = values
+                    value = calculate(a, b, t)
+                        setattr(widget, key, value)
 
-            self.dispatch('on_progress', widget, progress)
+                self.dispatch('on_progress', widget, progress)
 
-            # time to stop ?
-            if progress >= 1.:
-                self.stop(widget)
+                # time to stop ?
+                if progress >= 1.:
+                    self.stop(widget)
+        except ReferenceError:
+            Logger.warning("Animation: ReferenceError error catched in animation.py, Animation._update. App may misbehave.")
 
     def _calculate(self, a, b, t):
         _calculate = self._calculate
