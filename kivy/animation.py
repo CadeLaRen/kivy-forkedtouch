@@ -64,6 +64,7 @@ from types import ListType, TupleType, DictType
 from math import sqrt, cos, sin, pi
 from kivy.event import EventDispatcher
 from kivy.clock import Clock
+from kivy.logger import Logger
 
 
 class Animation(EventDispatcher):
